@@ -37,12 +37,47 @@ namespace MailAutoConfigurationLib.Models
 
     public class IncomingServer
     {
+        [XmlAttribute("type")]
+        public string? Type { get; set; }
 
+        [XmlElement("hostname")]
+        public string? Hostname { get; set; }
+
+        [XmlElement("socketType")]
+        public string? SocketType { get; set; }
+
+        [XmlElement("username")]
+        public string? Username { get; set; }
+
+        [XmlElement("authentication")]
+        public string? Authentication { get; set; }
+
+        [XmlElement("pop3")]
+        public Pop3? Pop3 { get; set; }
+    }
+
+    public class Pop3
+    {
+        [XmlElement("leaveMessagesOnServer")]
+        public string? LeaveMessagesOnServer { get; set; }
     }
 
     public class OutgoingServer
     {
+        [XmlAttribute("type")]
+        public string? Type { get; set; }
 
+        [XmlElement("hostname")]
+        public string? Hostname { get; set; }
+
+        [XmlElement("socketType")]
+        public string? SocketType { get; set; }
+
+        [XmlElement("username")]
+        public string? Username { get; set; }
+
+        [XmlElement("authentication")]
+        public string? Authentication { get; set; }
     }
 
 }

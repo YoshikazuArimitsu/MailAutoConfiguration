@@ -1,11 +1,13 @@
 ﻿using MailAutoConfigurationLib.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using System.Xml;
 
 namespace MailAutoConfigurationLib
 {
@@ -19,7 +21,51 @@ namespace MailAutoConfigurationLib
             {
                 return serializer.Deserialize(reader) as ConfigFileFormat;
             }
+        }
 
+        private Task<ConfigFileFormat?> tryParseConfigurationUrlAsync(string url)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(ConfigFileFormat));
+
+            using (var reader = XmlReader.Create(url))
+            {
+                var config = serializer.Deserialize(reader) as ConfigFileFormat;
+                return Task.FromResult(config);
+            }
+        }
+
+        public async Task<ConfigFileFormat?> SearchAsync(string emailAddress)
+        {
+            if(emailAddress.IndexOf("@") == -1)
+            {
+                throw new ArgumentException("Invalid emailAddress format");
+            }
+
+            var domain = emailAddress.Substring(emailAddress.IndexOf("@") + 1);
+
+            var urls = new string[] {
+                $"http://autoconfig.{domain}/mail/config-v1.1.xml?emailaddress={emailAddress}",
+                $"http://{domain}/.well-known/autoconfig/mail/config-v1.1.xml",
+                $"https://live.mozillamessaging.com/autoconfig/v1.1/{domain}",
+            };
+
+            foreach(var url in urls)
+            {
+                try
+                {
+                    var config = await tryParseConfigurationUrlAsync(url);
+
+                    if(config != null)
+                    {
+                        return config;
+                    }
+                } catch(Exception)
+                {
+
+                }
+            }
+
+            return null;
         }
     }
 }

@@ -4,10 +4,7 @@ namespace MailAutoConfigurationTest
 {
     public class UnitTest1
     {
-        [Fact]
-        public void TestParse()
-        {
-            string xml = @"<?xml version=""1.0""?>
+        public static string xml = @"<?xml version=""1.0""?>
 <clientConfig version=""1.1"">
     <emailProvider id=""example.com"">
       <domain>example.com</domain>
@@ -217,9 +214,24 @@ namespace MailAutoConfigurationTest
 
 </clientConfig>";
 
+
+        [Fact]
+        public void TestParse()
+        {
+
             var config = new MailAutoConfiguration().ParseXML(xml);
             
             Assert.NotNull(config);
         }
+
+        [Fact]
+        public async Task TestSearchByEmail()
+        {
+            var autoConfig = new MailAutoConfiguration();
+            var config = await autoConfig.SearchAsync("yarimit@gmail.com");
+
+            Assert.NotNull(config);
+        }
+
     }
 }
