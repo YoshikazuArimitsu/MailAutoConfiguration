@@ -15,6 +15,24 @@ namespace MailAutoConfigurationLib.Models
     {
         [XmlElement("emailProvider")]
         public List<EmailProvider> EmailProviders { get; set; } = new List<EmailProvider>();
+
+        [XmlElement("oAuth2")]
+        public OAuth2? OAuth2 { get; set; }
+    }
+
+    public class OAuth2
+    {
+        [XmlElement("issuer")]
+        public string? Issuer { get; set; }
+
+        [XmlElement("scope")]
+        public string? Scope { get; set; }
+
+        [XmlElement("authURL")]
+        public string? AuthURL { get; set; }
+
+        [XmlElement("tokenURL")]
+        public string? TokenURL { get; set; }
     }
 
     public class EmailProvider
@@ -29,10 +47,10 @@ namespace MailAutoConfigurationLib.Models
 
 
         [XmlElement("incomingServer")]
-        public IncomingServer? IncomingServer { get; set; }
+        public List<IncomingServer>? IncomingServer { get; set; }
 
         [XmlElement("outgoingServer")]
-        public OutgoingServer? OutgoingServer { get; set; }
+        public List<OutgoingServer>? OutgoingServer { get; set; }
     }
 
     public class IncomingServer
@@ -43,6 +61,9 @@ namespace MailAutoConfigurationLib.Models
         [XmlElement("hostname")]
         public string? Hostname { get; set; }
 
+        [XmlElement("port")]
+        public int? Port { get; set; }
+
         [XmlElement("socketType")]
         public string? SocketType { get; set; }
 
@@ -51,9 +72,6 @@ namespace MailAutoConfigurationLib.Models
 
         [XmlElement("authentication")]
         public string? Authentication { get; set; }
-
-        [XmlElement("pop3")]
-        public Pop3? Pop3 { get; set; }
     }
 
     public class Pop3
