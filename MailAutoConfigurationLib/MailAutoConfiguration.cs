@@ -13,6 +13,9 @@ namespace MailAutoConfigurationLib
 {
     public class MailAutoConfiguration
     {
+        private IEnumerable<string> LocalPaths { get; set; } = new List<string>();
+
+
         public ConfigFileFormat? ParseXML(string xml)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(ConfigFileFormat));
@@ -43,13 +46,16 @@ namespace MailAutoConfigurationLib
 
             var domain = emailAddress.Substring(emailAddress.IndexOf("@") + 1);
 
+            var paths = LocalPaths.Select(p => $"{p}/{domain}.xml");
             var urls = new string[] {
                 $"http://autoconfig.{domain}/mail/config-v1.1.xml?emailaddress={emailAddress}",
                 $"http://{domain}/.well-known/autoconfig/mail/config-v1.1.xml",
                 $"https://live.mozillamessaging.com/autoconfig/v1.1/{domain}",
             };
 
-            foreach(var url in urls)
+            var pathUrls = paths.Concat(urls);
+
+            foreach(var url in pathUrls)
             {
                 try
                 {
